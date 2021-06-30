@@ -1,6 +1,5 @@
 #pragma once
 
-#include "token.h"
 
 //
 // Disable Security warnings.
@@ -11,8 +10,6 @@
 #define ATTR_LIST_LEN	24
 
 /**
- * Memory pool functions are not implemented,
- * Custom memory management functions for allocations,
  * deallocs, etc.
  */
 
@@ -20,13 +17,10 @@ typedef struct {
 	char* data;
 } Attr;
 
-typedef Attr* AttributeList;
+typedef Attr** AttributeList;
 
 typedef struct {
-	char* key;
-
-	int attr_len;
-	AttributeList attr_list[ATTR_LIST_LEN]; // Array of Attributes.
+	AttributeList values; // Array of Attributes.
 } Prop;
 
 typedef struct {
@@ -69,12 +63,10 @@ void InsertAttr(Prop* prp, Attr* attr);
 //
 // Struct allocation functions.
 //
-Block* block_add(int type);
-Prop* prop_add(Block* blk, char* key);
-Attr* attr_add(Prop* prp, char* data);
-
-void free_block(Block* blk);
+Block* CreateBlock(int type);
+Prop* CreateProp(Block* blk, char* key);
+Attr* CreateAttr(Prop* prp, char* data);
 void free_prop(Prop* prp);
 void free_attr(Attr* attr);
 
-const char* get_last_error();
+const char* GetLastError();

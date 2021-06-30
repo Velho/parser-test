@@ -38,5 +38,4 @@ char g_hide_block_filter[] =
 int main()
 {
 	
-	
 }

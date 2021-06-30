@@ -8,7 +8,7 @@
 
 char g_error[128];
 
-Block* block_add(int type)
+Block* CreateBlock(int type)
 {
 	Block* blk = (Block*)malloc(sizeof(Block));
 	if (blk == NULL) {
@@ -21,27 +21,24 @@ Block* block_add(int type)
 	return blk;
 }
 
-Prop* prop_add(Block* blk, char* key)
+Prop* CreateProp(Block* blk, char* key)
 {
 	Prop* prop = (Prop*)malloc(sizeof(Prop));
 	if (prop == NULL) {
 		sprintf(g_error, "prop_add() => Internal Memory error.\n");
-		return NULL;
-	}
 
-	prop->key = key;
 
-	// Allocate max amount of attributes.
-	prop->attr_len = 0;
+	// prop->values = (Attr*)malloc(sizeof(Attr) * ATTR_LIST_MAX);
 
 	blk->prop = prop;
 
 	return prop;
 }
 
-Attr* attr_add(Prop* prp, char* data)
+Attr* CreateAttr(Prop* prp, char* data)
 {
 	Attr* attr = malloc(sizeof(Attr));
+
 	if (attr == NULL) {
 		sprintf(g_error, "attr_add() => Internal Memory error.\n");
 		return NULL;
@@ -53,11 +50,6 @@ Attr* attr_add(Prop* prp, char* data)
 	return attr;
 }
 
-void free_block(Block* blk)
-{
-	free(blk);
-}
-
 void free_prop(Prop* prp)
 {
 	free(prp->attr_list);
@@ -66,12 +58,8 @@ void free_prop(Prop* prp)
 
 void free_attr(Attr* attr)
 {
-	free(attr);
-}
-
-const char* get_last_error()
-{
-	return g_error;
+	free(prp->values);
+	free(prp);
 }
 
 // Necessarily doesnt need the context object AS
