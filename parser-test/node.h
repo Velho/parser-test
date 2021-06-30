@@ -20,7 +20,7 @@ typedef struct {
 typedef Attr** AttributeList;
 
 typedef struct {
-	AttributeList values; // Array of Attributes.
+	AttributeList attributes; // Array of Attributes.
 } Prop;
 
 typedef struct {
@@ -66,7 +66,8 @@ void InsertAttr(Prop* prp, Attr* attr);
 Block* CreateBlock(int type);
 Prop* CreateProp(Block* blk, char* key);
 Attr* CreateAttr(Prop* prp, char* data);
-void free_prop(Prop* prp);
-void free_attr(Attr* attr);
+void FreeBlock(Block* blk);
+void FreeProp(Prop* prp);
+void FreeAttr(Attr* attr);
 
 const char* GetLastError();

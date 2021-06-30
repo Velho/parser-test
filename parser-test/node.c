@@ -26,7 +26,7 @@ Prop* CreateProp(Block* blk, char* key)
 	Prop* prop = (Prop*)malloc(sizeof(Prop));
 	if (prop == NULL) {
 		sprintf(g_error, "prop_add() => Internal Memory error.\n");
-
+	}
 
 	// prop->values = (Attr*)malloc(sizeof(Attr) * ATTR_LIST_MAX);
 
@@ -50,17 +50,28 @@ Attr* CreateAttr(Prop* prp, char* data)
 	return attr;
 }
 
-void free_prop(Prop* prp)
+//
+// Free the given struct with it's dependencies?
+// Reconsider the allocation strategy.
+//
+
+void FreeBlock(Block* blk)
 {
-	free(prp->attr_list);
+	free(blk);
+}
+
+void FreeProp(Prop* prp)
+{
+	free(prp->attributes);
 	free(prp);
 }
 
-void free_attr(Attr* attr)
+void FreeAttr(Attr* attr)
 {
-	free(prp->values);
-	free(prp);
+	free(attr);
 }
+
+
 
 // Necessarily doesnt need the context object AS
 // we can travel the chain from the root itself.
