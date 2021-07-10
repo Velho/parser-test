@@ -1,7 +1,7 @@
 #pragma once
 
-#define LOG_DBG 1
+#define DEBUG_LOGGER 1
 
-#ifdef LOG_DBG
+#ifdef DEBUG_LOGGER
 	#include <stdio.h>
 #endif

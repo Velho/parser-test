@@ -142,7 +142,7 @@
     <ClCompile Include="lexer.c" />
     <ClCompile Include="node.c" />
     <ClCompile Include="parser.c" />
-    <ClCompile Include="Source.c" />
+    <ClCompile Include="main.c" />
     <ClCompile Include="token.c" />
   </ItemGroup>
   <ItemGroup>

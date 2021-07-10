@@ -1,27 +1,52 @@
 #include "lexer.h"
 #include "pdef.h"
 
+#include "token.h"
+
+#include <stdlib.h>
 #include <string.h>
 
-#define TOKEN_DELIM		" "
+#define TOKEN_DATA_DELIM		" "
+#define ERROR_BUFFER_LEN		128
 
-LTypeList* CreateLTypeList()
+// MSVC is defined, don't care about the resulting value.
+#ifdef _MSC_VER
+// TODO : Redefine it to something else on different platforms.
+	//<! Returns the String size in bytes.
+#define LxeStrSizeInBytes(str)		_countof(str)
+#endif
+
+char g_error[ERROR_BUFFER_LEN];
+
+
+char* GetErrorMessage()
 {
-	LTypeList* typelist = (LTypeList*)malloc(sizeof(LTypeList));
+	return g_error;
+}
+
+LxeTokenContext* CreateTokenContext()
+{
+	LxeTokenContext* typelist = (LxeTokenContext*)malloc(sizeof(LxeTokenContext));
+
+	typelist->head = NULL;
+	typelist->trail = NULL;
+	typelist->size = 0;
+
 	return typelist;
 }
 
-void ClearLTypeList(LTypeList *list)
+void ClearLTypeList(LxeTokenContext* list)
 {
-	LType* last;
-	LType* type;
+	LxeTokenData* last;
+	LxeTokenData* type;
 
-	last = list->next;
+	// head->prev == NULL , this stmnt should apply.
+	last = list->head->next;
 
 	while (last != NULL)
 	{
 		type = last;
-		last = list->next;
+		last = type->next;
 
 		if (type != NULL)
 		{
@@ -31,69 +56,293 @@ void ClearLTypeList(LTypeList *list)
 }
 
 
-void LTypeAddList(LTypeList* list, LType* type)
+void LTypeAddList(LxeTokenContext* list, LxeTokenData* type)
 {
-	LType* prev;
-	prev = list->next;
+	LxeTokenData* prev;
+	prev = type->next;
 
-	list->prev = prev;
-	list->next = type;
+	type->prev = prev;
+	type->next = type;
 
+	list->trail = type;
 	list->size += 1;
 }
 
-
-LType* LTypeNew(LTypeList* list)
+/*
+function insertBeginning(List list, Node newNode)
+	if list.firstNode == null
+		list.firstNode  := newNode
+		list.lastNode   := newNode
+		newNode.prev  := null
+		newNode.next  := null
+	else
+		insertBefore(list, list.firstNode, newNode)
+*/
+void LxeInsertBegin(LxeTokenContext* list, LxeTokenData* token)
 {
-	return (LType*)malloc(sizeof(LType));
+	if (list->head == NULL)
+	{
+		// TODO : Logic behind this..?
+		list->head = token;
+		list->trail = token;
+		token->prev = NULL;
+		token->next = NULL;
+	}
+	else
+	{
+		LxeInsertBefore(list, list->trail, token);
+	}
 }
 
-LType* LTypeSetLine(LTypeList* list, const char* str)
+/*
+function insertEnd(List list, Node newNode)
+	 if list.lastNode == null
+		 insertBeginning(list, newNode)
+	 else
+		 insertAfter(list, list.lastNode, newNode)
+*/
+void LxeInsertEnd(LxeTokenContext* list, LxeTokenData* token)
 {
-	LType* lexeme;
+	if (list->trail == NULL)
+	{
+		LxeInsertBegin(list, token);
+	}
+	else
+	{
+		LxeInsertAfter(list, list->trail, token);
+	}
+}
+
+/*
+function insertBefore(List list, Node node, Node newNode)
+	newNode.next  := node
+	if node.prev == null
+		newNode.prev  := null -- (not always necessary)
+		list.firstNode  := newNode
+	else
+		newNode.prev  := node.prev
+		node.prev.next  := newNode
+	node.prev  := newNode
+*/
+void LxeInsertBefore(LxeTokenContext* list, LxeTokenData* token, LxeTokenData* newtoken)
+{
+	newtoken->next = token;
+
+	if (token->prev == NULL)
+	{
+		newtoken->prev = NULL; // Not always necesary.
+		list->head = newtoken;
+	}
+	else
+	{
+		newtoken->prev = token->prev;
+		token->prev->next = newtoken;
+	}
+
+	token->prev = newtoken;
+}
+
+/*
+function insertAfter(List list, Node node, Node newNode)
+	newNode.prev  := node
+	if node.next == null
+		newNode.next  := null -- (not always necessary)
+		list.lastNode  := newNode
+	else
+		newNode.next  := node.next
+		node.next.prev  := newNode
+	node.next  := newNode
+*/
+void LxeInsertAfter(LxeTokenContext* list, LxeTokenData* token, LxeTokenData* newtoken)
+{
+	newtoken->prev = token;
+
+	if (token->next == NULL)
+	{
+		newtoken->next = NULL; // Not always necessary.
+		list->trail = newtoken;
+	}
+	else
+	{
+		newtoken->next = token->next;
+		token->next->prev = newtoken;
+	}
+	token->next = newtoken;
+}
+
+void LxeTraverseList(LxeTokenContext* list, LxeTokenDataCallback cb)
+{
+	LxeTokenData* temp = list->head;
+
+	while (temp != NULL)
+	{
+		cb(temp);
+		temp = temp->next;
+	}
+}
+
+
+LxeTokenValue* LxeNewToken(Token* token, char* data)
+{
+	LxeTokenValue* tok = (LxeTokenValue*)malloc(sizeof(LxeTokenValue));
+	size_t len = strnlen_s(data, BUF_MAX_SIZE);
+
+	strcpy_s(tok->data, LxeStrSizeInBytes(tok->data), data);
+
+	return tok;
+}
+
+static LxeTokenValue* LxeNewTokenValue(const char* str, size_t len)
+{
+	LxeTokenValue* token_value = (LxeTokenValue*)malloc(sizeof(LxeTokenValue));
+
+	token_value->next = NULL;
+
+	// Do we need add the \0.
+	strcpy_s(token_value->data, LxeStrSizeInBytes(token_value->data), str);
+	token_value->len = len;
+
+	return token_value;
+}
+
+LxeTokenValue* LxeInsertNode(LxeTokenData* /* head */ token, char* data)
+{
+	// Create new value with the given data.
+	// Adds the newly created value to the linked list.
+
+	size_t datalen;
+	struct _LxeTokenValue* temp;
+	struct _LxeTokenValue* p;
+
+	datalen = strnlen_s(data, BUF_MAX_SIZE);
+
+	// temp = (LxeTokenValue*)malloc(sizeof(LxeTokenValue));
+	temp = LxeNewTokenValue(data, datalen);
+	if (temp == NULL)
+	{
+		// Failed allocation.
+		sprintf_s(g_error, ERROR_BUFFER_LEN, "LxeInsertNode(..) => Failed allocation of new TokenValue.\n");
+		return NULL;
+	}
+
+	// Done in the allocation.
+	// strcpy_s(temp->data, LxeStrSizeInBytes(temp->data), data);
+
+	if (token->head == NULL)
+	{
+		token->head = temp;
+	}
+	else
+	{
+		p = token->head;
+		while (p->next != NULL)
+		{
+			p = p->next;
+		}
+		p->next = temp;
+		token->size++;
+	}
+
+	return temp;
+}
+
+static LxeTokenData* LxeNewTokenData(const char* str)
+{
+	LxeTokenData* token_dat;
+	size_t str_len;
+
+	token_dat = (LxeTokenData*)malloc(sizeof(LxeTokenData));
+	str_len = strnlen_s(str, BUF_MAX_SIZE);
+
+	if (token_dat == NULL)
+	{
+		return NULL;
+	}
+	//     _ACRTIMP errno_t __cdecl strcpy_s(
+	//_Out_writes_z_(_SizeInBytes) char* _Destination,
+	//	_In_                         rsize_t     _SizeInBytes,
+	//	_In_z_                       char const* _Source
+	strcpy_s(token_dat->buffer, LxeStrSizeInBytes(token_dat->buffer), str);
+
+	token_dat->head = NULL;
+	token_dat->values = NULL;
+	token_dat->size = 0;
+
+	return token_dat;
+}
+
+LxeTokenData* LxeSetLine(LxeTokenContext* list, const char* str)
+{
+
+	//
+	// Allocates and set's the first TokenData.
+	//
+
+	LxeTokenData* lexeme;
 	char* token;
+	size_t len;
 
-	strcpy(list->buffer, str);
-	lexeme = LTypeNew(list);
+	// TODO : Do we need the size anymore? Anyother use when the alloc
+	// is made in the func NewTokenDat.
+	len = strnlen_s(str, BUF_MAX_SIZE);
+	lexeme = LxeNewTokenData(str);
 
-	if (lexeme == NULL) {
-		// TODO : Output error.
+	if (lexeme == NULL)
+	{
+		sprintf_s(g_error, ERROR_BUFFER_LEN, "LxeSetLine() => Failed to allocate new LxeTokenData.\n");
 		return NULL;
 	}
 
 	// Get the first token.
-	token = strtok(list->buffer, TOKEN_DELIM);
-	strcpy(lexeme->data, token);
+	token = strtok_s(str, TOKEN_DATA_DELIM, &lexeme->token_ctx);
+	printf("Tokenizer context : %p\n", lexeme->token_ctx);
 
-	//
-	// TODO : Resolve the enum Token for the given data.
-	//
+	if (token == NULL)
+	{
+		sprintf_s(g_error, ERROR_BUFFER_LEN, "LxeSetLine() => Failed to tokenize the string.\n");
+		return lexeme;
+	}
 
-	// TODO : Make sure the AddList is functioning correctly.
-	LTypeAddList(list, lexeme);
+	len = strnlen_s(token, BUF_MAX_SIZE);
 
-#ifdef LOG_DBG
-	printf("LTypeSetLine() => Token: \t%s\n", token);
+	// Set the data to Lxe object.
+	strcpy_s(lexeme->token, LxeStrSizeInBytes(lexeme->token), token); // len + 1 (??)
+
+	// Add the Lxe object to end of the list.
+	LxeInsertEnd(list, lexeme);
+
+#ifdef DEBUG_LOGGER
+	printf("LxeSetLine() => Token: \t%s\n", token);
 #endif
 	return lexeme;
 }
 
-/*
-The call, suggested by the getNextTokencommand, 
-causes the lexical analyzer to read characters
-from its input until it can identify the next lexeme
-and produce for it the next token, which it returns to the parser
-*/
-
-LType* LGetNextToken(LType* type)
+LxeTokenValue* LxeGetNextToken(LxeTokenContext* list, LxeTokenData* type)
 {
 	char* token;
+	size_t token_len;
+	LxeTokenValue* lxe_token;
 
 	// 
-	// strtok() the passed string.
+	// strtok_s() the passed string.
+	// Tokenization is started in the SetLine function,
+	// so it can be called with NULL and token_ctx.
+	//
+	// Make a new allocation for the passed in type.
 	//
 
-	token = strtok(NULL, TOKEN_DELIM);
+	token = strtok_s(NULL, TOKEN_DATA_DELIM, &type->token_ctx);
+	if (token == NULL)
+	{
+		// Tokenizer is finished.
+		return NULL;
+	}
 
-	return NULL;
+	lxe_token = LxeInsertNode(type, token);
+
+#ifdef DEBUG_LOGGER
+	printf("LxeGetNextToken() => Next Token: \t%s\tLen => %d\n", lxe_token->data, type->size);
+#endif
+
+	return lxe_token;
 }

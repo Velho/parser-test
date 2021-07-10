@@ -1,5 +1,4 @@
-
-#include "node.h"
+#include "parser.h"
 
 #include <stdio.h>
 
@@ -32,10 +31,26 @@ char g_hide_block_filter[] =
 	"DisableDropSound True"
 };
 
+#define FILTER_PATH "C:/Users/Velho/source/repos/parser-test/Debug/"
+
 //
 // Entry-Point
 //
 int main()
 {
+	int ret;
+
+	//
+	// Implement a console renderer.
+	// Console renderer should be dynamic where you can
+	// give any input and perform all application actions.
+	//
+
+	// Parse the given stream.
+	ret = ParseFile(FILTER_PATH "filters/sample1.filter");
 	
+	// Able to use the same context?
+
+	// ...
+	// Profit
 }

@@ -98,3 +98,26 @@ ActionToken* act_token_get_by_str(char* data);
 OperatorToken* op_token_get_by_str(char* data);
 BlockToken* blk_token_get_by_str(char* data);
 
+typedef union {
+	ConditionToken ctoken;
+	ActionToken atoken;
+	OperatorToken otoken;
+	BlockToken btoken;
+} MyUnion;
+
+typedef struct {
+	void* token;
+
+	enum {
+		TK_CONDITION,
+		TK_ACTION,
+		TK_OPERATOR,
+		TK_BLOCK
+	} token_type;
+} Token;
+
+//
+// Support functions for the Token Class identifying,
+// 
+//
+

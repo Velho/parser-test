@@ -92,13 +92,13 @@ Node* AddNode(NodeContext* ctrl, Node* root, Block* data)
 
 void InsertAttr(Prop* prp, Attr* attr)
 {
-	if (prp->attr_len > ATTR_LIST_LEN) {
+	/*if (prp->attributes ATTR_LIST_LEN) {
 		sprintf(g_error, "InsertAttr() => List length exceeded.");
 		return;
-	}
+	}*/
 
 	// Inserts the Attribute to the Property provided.
 	// Copied to the list?
-	*(prp->attr_list + prp->attr_len) = attr;
-	prp->attr_len++;
+	//*(prp->attr_list + prp->attr_len) = attr;
+	//prp->attr_len++;
 }

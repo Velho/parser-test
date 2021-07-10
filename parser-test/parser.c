@@ -7,6 +7,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+Parser* CreateParser()
+{
+	return (Parser*)malloc(sizeof(Parser));
+}
+
 Parser* InitParser(const char* filename) {
 	Parser* parser = (Parser*)malloc(sizeof(Parser));
 
@@ -25,6 +31,28 @@ Parser* InitParser(const char* filename) {
 	return parser;
 }
 
+
+int ParseFile(const char* filename)
+{
+	Parser* parser;
+	FILE* file;
+	int err;
+
+	parser = CreateParser();
+
+	file = fopen(filename, "r");
+	if (file == NULL) {
+		sprintf(parser->error, "ParseFile() => Failed to open the file.");
+		return 1;
+	}
+
+	err = ParseStream(file);
+
+	fclose(file);
+	return err;
+}
+
+
 /*
 char g_show_block_filter[] =
 {
@@ -39,13 +67,15 @@ char g_show_block_filter[] =
 	"\tDisableDropSound True\n"
 };
 */
-int ParseStream(Parser* parser, void* stream)
+int ParseStream(void* stream)
 {
+	Parser* parser = CreateParser();
+	
 	// 
 	// While loop as tokenizer?
 	//
 
-	LTypeList* lexeme_list = CreateLTypeList();
+	LxeTokenContext* lexeme_list = CreateTokenContext();;
 
 	// Buffer size for the given line.
 	char buf[BUF_MAX_SIZE];
@@ -62,34 +92,15 @@ int ParseStream(Parser* parser, void* stream)
 		*/
 
 		// Build the node list.
-		LType* token;
-		LType* lexeme = LTypeSetLine(lexeme_list, buf);
+		LxeTokenData* lexeme = LxeSetLine(lexeme_list, buf);
+		LxeTokenValue* token;
 
-		// Loop thro the tokens?
-		while ((token = LGetNextToken(lexeme)) != NULL) {
-			LTypeAddList(lexeme_list, token);
-		}
+		while ((token = LxeGetNextToken(lexeme_list, lexeme)) != NULL)
+			;
+
 	}
 
 	// Syntax analysis
 
-	return 0;
-}
-
-int ParseFile(Parser* parser, const char* filename)
-{
-	// Should we open the file here.
-	FILE* file;
-	int err;
-
-	file = fopen(filename, "r");
-	if (file == NULL) {
-		sprintf(parser->error, "ParseFile() => Failed to open the file.");
-		return 1;
-	}
-
-	err = ParseStream(parser, file);
-
-	fclose(file);
 	return 0;
 }

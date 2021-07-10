@@ -91,7 +91,7 @@ ConditionToken* cond_token_get_by_str(char* data)
 
 	for (tk = condition_tokens; tk != NULL; tk++)
 	{
-		if (strcmp(tk->token, data) == 0)
+		if (strcmp(tk->data, data) == 0)
 		{
 			return tk;
 		}
@@ -106,7 +106,7 @@ ActionToken* act_token_get_by_str(char* data)
 
 	for (tk = action_tokens; tk != NULL; tk++)
 	{
-		if (strcmp(tk->token, data) == 0)
+		if (strcmp(tk->data, data) == 0)
 		{
 			return tk;
 		}
@@ -121,7 +121,7 @@ OperatorToken* op_token_get_by_str(char* data)
 
 	for (tk = operator_tokens; tk != NULL; tk++)
 	{
-		if (strcmp(tk->token, data) == 0)
+		if (strcmp(tk->data, data) == 0)
 		{
 			return tk;
 		}
@@ -136,7 +136,7 @@ BlockToken* blk_token_get_by_str(char* data)
 
 	for (tk = block_tokens; tk != NULL; tk++)
 	{
-		if (strcmp(tk->token, data) == 0)
+		if (strcmp(tk->data, data) == 0)
 		{
 			return tk;
 		}

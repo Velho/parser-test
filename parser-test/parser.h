@@ -26,8 +26,12 @@ typedef struct {
 	char error[128];
 } Parser;
 
+Parser* CreateParser();
+
 //
-// Parser interface.
+// Pass the Parser as argument?
 //
-int ParseStream(Parser* parser, const char* stream);
+
+int ParseStream(void* stream);
+int ParseFile(const char* filename);
 
