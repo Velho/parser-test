@@ -30,6 +30,9 @@
     <ClCompile Include="lexer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parser.h">
@@ -45,6 +48,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pdef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sanal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

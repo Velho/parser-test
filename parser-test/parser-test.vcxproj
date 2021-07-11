@@ -143,6 +143,7 @@
     <ClCompile Include="node.c" />
     <ClCompile Include="parser.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="sem.c" />
     <ClCompile Include="token.c" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,8 @@
     <ClInclude Include="node.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="pdef.h" />
+    <ClInclude Include="sanal.h" />
+    <ClInclude Include="sem.h" />
     <ClInclude Include="token.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
