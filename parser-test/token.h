@@ -105,16 +105,19 @@ typedef union {
 	BlockToken btoken;
 } MyUnion;
 
-typedef struct {
-	void* token;
+typedef enum {
+	TK_CONDITION,
+	TK_ACTION,
+	TK_OPERATOR,
+	TK_BLOCK
+} TokenType;
 
-	enum {
-		TK_CONDITION,
-		TK_ACTION,
-		TK_OPERATOR,
-		TK_BLOCK
-	} token_type;
+typedef struct _Token {
+	void* clas;
+	TokenType type;
 } Token;
+
+Token* TokGetToken(const char* data);
 
 //
 // Support functions for the Token Class identifying,

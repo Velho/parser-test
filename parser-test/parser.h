@@ -1,7 +1,5 @@
 #pragma once
 
-#include "node.h"
-
 #include <stdio.h>
 
 typedef enum {
@@ -13,7 +11,9 @@ typedef enum {
 	p_end
 } ParserState;
 
-typedef struct {
+struct _LxeTokenContext;
+
+typedef struct _Parser {
 	FILE* stream;
 	ParserState state;
 
@@ -24,6 +24,7 @@ typedef struct {
 	size_t length;
 
 	char error[128];
+	struct _LxeTokenContext* lexer_ctx;
 } Parser;
 
 Parser* CreateParser();

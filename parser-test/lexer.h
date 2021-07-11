@@ -1,7 +1,5 @@
 #pragma once
 
-#include "token.h"
-
 #include <stddef.h>
 
 #define BUF_MAX_SIZE	512
@@ -14,6 +12,8 @@
 // more than it does a lexer.
 // TODO : Rename this file to tokenizer.h
 //
+
+struct _Parser;
 
 typedef struct _LxeTokenValue {
 	char data[BUF_MAX_SIZE]; // Replace it with the buffer.
@@ -58,7 +58,7 @@ typedef struct _LxeTokenData {
 
 typedef void (*LxeTokenDataCallback)(LxeTokenData*);
 
-typedef struct {
+typedef struct _LxeTokenContext {
 	LxeTokenData* head;
 	LxeTokenData* trail;
 
@@ -67,10 +67,10 @@ typedef struct {
 
 char* GetErrorMessage();
 
-LxeTokenContext* CreateTokenContext();
-void ClearLTypeList(LxeTokenContext*list);
+LxeTokenContext* CreateTokenContext(struct _Parser* parser);
+void LxeRelease(LxeTokenContext* ctx); //! Free the memory used the lexer context.
 
-void LTypeAddList(LxeTokenContext*list, LxeTokenData* type); //<! Deprecated.
+void LTypeAddList(LxeTokenContext* list, LxeTokenData* type); //<! Deprecated.
 
 void LxeInsertBegin(LxeTokenContext* list, LxeTokenData* token);
 void LxeInsertEnd(LxeTokenContext* list, LxeTokenData* token);

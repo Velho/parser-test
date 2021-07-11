@@ -3,6 +3,8 @@
 
 #include "token.h"
 
+#include "parser.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -24,9 +26,12 @@ char* GetErrorMessage()
 	return g_error;
 }
 
-LxeTokenContext* CreateTokenContext()
+LxeTokenContext* CreateTokenContext(Parser* parser)
 {
 	LxeTokenContext* typelist = (LxeTokenContext*)malloc(sizeof(LxeTokenContext));
+
+	// Assign the lexer context to the parser object.
+	parser->lexer_ctx = typelist;
 
 	typelist->head = NULL;
 	typelist->trail = NULL;
@@ -35,11 +40,31 @@ LxeTokenContext* CreateTokenContext()
 	return typelist;
 }
 
-void ClearLTypeList(LxeTokenContext* list)
+static void LxeReleaseTokenValue(LxeTokenData* data)
+{
+	LxeTokenValue* head;
+	LxeTokenValue* temp;
+	
+	head = data->head;
+	temp = data->head;
+
+	while (temp != NULL)
+	{
+		temp = head->next;
+		free(head);
+
+		head = temp;
+	}
+}
+
+static void LxeReleaseTokenData(LxeTokenContext* list)
 {
 	LxeTokenData* last;
 	LxeTokenData* type;
 
+	// TODO : Remove the singly linked list as well
+	// under the LxeTokenData -> head of type TokenValue.
+	
 	// head->prev == NULL , this stmnt should apply.
 	last = list->head->next;
 
@@ -50,9 +75,19 @@ void ClearLTypeList(LxeTokenContext* list)
 
 		if (type != NULL)
 		{
+			// Release the token values before losing the data pointer forever.
+			LxeReleaseTokenValue(type);
 			free(type);
 		}
 	}
+}
+
+void LxeRelease(LxeTokenContext* ctx)
+{
+	// Release the TokenDats from head to trail.
+	LxeReleaseTokenData(ctx);
+	// Free the lexer context.
+	free(ctx);
 }
 
 
@@ -320,7 +355,7 @@ LxeTokenData* LxeSetLine(LxeTokenContext* list, const char* str)
 LxeTokenValue* LxeGetNextToken(LxeTokenContext* list, LxeTokenData* type)
 {
 	char* token;
-	size_t token_len;
+	//size_t token_len;
 	LxeTokenValue* lxe_token;
 
 	// 

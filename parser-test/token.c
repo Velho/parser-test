@@ -1,5 +1,6 @@
 #include "token.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -140,6 +141,45 @@ BlockToken* blk_token_get_by_str(char* data)
 		{
 			return tk;
 		}
+	}
+
+	return NULL;
+}
+
+
+static Token* TokAlloc(void* tok, TokenType type)
+{
+	Token* newToken = (Token*)malloc(sizeof(Token));
+
+	newToken->clas = tok;
+	newToken->type = type;
+
+	return newToken;
+}
+
+Token* TokGetToken(const char* data)
+{
+	void* clas;
+	if ((clas = cond_token_get_by_str(data)) != NULL)
+	{
+		// Create new Token object.
+
+		return TokAlloc(clas, TK_CONDITION);
+	}
+
+	if ((clas = act_token_get_by_str(data)) != NULL)
+	{
+		return TokAlloc(clas, TK_ACTION);
+	}
+
+	if ((clas = op_token_get_by_str(data)) != NULL)
+	{
+		return TokAlloc(clas, TK_OPERATOR);
+	}
+
+	if ((clas = blk_token_get_by_str(data)) != NULL)
+	{
+		return TokAlloc(clas, TK_BLOCK);
 	}
 
 	return NULL;

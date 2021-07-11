@@ -1,12 +1,12 @@
 #include "parser.h"
-#include "node.h"
 #include "token.h"
-
 #include "lexer.h"
+#include "sem.h"
 
 #include <stdlib.h>
 #include <string.h>
 
+char g_error[128];
 
 Parser* CreateParser()
 {
@@ -16,15 +16,18 @@ Parser* CreateParser()
 Parser* InitParser(const char* filename) {
 	Parser* parser = (Parser*)malloc(sizeof(Parser));
 
-	if (parser == NULL) {
-		// sprintf(parser->error, "InitParser() => Failed to allocate the parser.\n");
+	if (parser == NULL)
+	{
+		sprintf_s(g_error, 128, "InitParser() => Failed to allocate the parser.\n");
 		return NULL;
 	}
 
-	parser->stream = fopen(filename, "r");
+	errno_t err;
+	err = fopen_s(&parser->stream, filename, "r");
 
-	if (parser->stream == NULL) {
-		sprintf(parser->error, "InitParser() => Failed to open stream.\n");
+	if (err)
+	{
+		sprintf_s(g_error, 128, "InitParser() => Failed to open stream.\n");
 		return NULL;
 	}
 
@@ -34,21 +37,20 @@ Parser* InitParser(const char* filename) {
 
 int ParseFile(const char* filename)
 {
-	Parser* parser;
 	FILE* file;
 	int err;
 
-	parser = CreateParser();
+	err = fopen_s(&file, filename, "r");
 
-	file = fopen(filename, "r");
-	if (file == NULL) {
-		sprintf(parser->error, "ParseFile() => Failed to open the file.");
-		return 1;
+	if (err)
+	{
+		sprintf_s(g_error, 128, "Failed to open the given buffer %s.", filename);
+		return err;
 	}
 
 	err = ParseStream(file);
-
 	fclose(file);
+
 	return err;
 }
 
@@ -75,7 +77,7 @@ int ParseStream(void* stream)
 	// While loop as tokenizer?
 	//
 
-	LxeTokenContext* lexeme_list = CreateTokenContext();;
+	LxeTokenContext* lexeme_list = CreateTokenContext(parser);
 
 	// Buffer size for the given line.
 	char buf[BUF_MAX_SIZE];
@@ -92,15 +94,45 @@ int ParseStream(void* stream)
 		*/
 
 		// Build the node list.
+		Token* tok_clas;
 		LxeTokenData* lexeme = LxeSetLine(lexeme_list, buf);
+
+		tok_clas = TokGetToken(lexeme->buffer);
+		SemAssignToken(tok_clas, lexeme);
+
+		//
+		// Assigning Token Type is different for the TokenData
+		// from the TokenValue.
+		//
+
 		LxeTokenValue* token;
-
 		while ((token = LxeGetNextToken(lexeme_list, lexeme)) != NULL)
-			;
+		{
+			//
+			// Match the Token.
+			//
 
+			tok_clas = TokGetToken(token->data);
+			SemAssignToken(tok_clas, token);
+			// SemClas assigned to the lexeme objects?
+			// Or handled in separate table?
+		}
 	}
 
+	//
+	// Semantics are assigned to the Data and value objects
+	// which can be used to retrieve the Sem Token values.
+	//
+
 	// Syntax analysis
+
+
+	//
+	// Releasing the managed memory here for the inner structures used by the application.
+	// 
+	// Free up the application data structures.
+	SemRelease();
+	LxeRelease(parser->lexer_ctx);
 
 	return 0;
 }
