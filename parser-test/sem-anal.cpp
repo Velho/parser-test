@@ -1,4 +1,4 @@
-#include "sem.h"
+#include "sem-anal.h"
 #include "token.h"
 
 #include <string.h>
@@ -19,7 +19,7 @@ typedef struct {
     size_t sem_capacity;
 } SemDynamicTable;
 
-SemDynamicTable g_DynamicTable = { 0 };
+SemDynamicTable g_DynamicTable = { };
 
 
 static void SemInsertTable(SemDynamicTable* table, SemClas* clas)
@@ -30,14 +30,14 @@ static void SemInsertTable(SemDynamicTable* table, SemClas* clas)
         // Double the capacity.
         table->sem_capacity = table->sem_capacity * 2;
         // TODO : Decipher the msvc C6308
-        table->sem_heap = realloc(table->sem_heap, table->sem_capacity * sizeof(SemClas));
+        table->sem_heap = (SemClas*)realloc(table->sem_heap, table->sem_capacity * sizeof(SemClas));
     }
 
     // Insert the given clas.
     memcpy(&table->sem_heap[table->sem_count++], clas, sizeof(SemClas));
 }
 
-static SemClas* SemAlloc(Token* tok_clas, void* data)
+static SemClas* SemAlloc(Token* /* tok_clas */, void* /* data */)
 {
     SemClas* semobject = (SemClas*)malloc(sizeof(SemClas));
 
@@ -50,7 +50,12 @@ static SemClas* SemAlloc(Token* tok_clas, void* data)
 void SemInit()
 {
     g_DynamicTable.sem_capacity = 1;
-    g_DynamicTable.sem_heap = realloc(g_DynamicTable.sem_heap, g_DynamicTable.sem_capacity * sizeof(SemClas));
+    g_DynamicTable.sem_heap = (SemClas*)realloc(g_DynamicTable.sem_heap, g_DynamicTable.sem_capacity * sizeof(SemClas));
+
+    if (g_DynamicTable.sem_heap == NULL)
+    {
+        // Error handling.
+    }
 }
 
 void SemRelease()

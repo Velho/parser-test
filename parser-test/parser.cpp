@@ -1,12 +1,12 @@
 #include "parser.h"
 #include "token.h"
 #include "lexer.h"
-#include "sem.h"
+#include "sem-anal.h"
 
 #include <stdlib.h>
 #include <string.h>
 
-char g_error[128];
+char g_parser_error[128];
 
 Parser* CreateParser()
 {
@@ -18,7 +18,7 @@ Parser* InitParser(const char* filename) {
 
 	if (parser == NULL)
 	{
-		sprintf_s(g_error, 128, "InitParser() => Failed to allocate the parser.\n");
+		sprintf_s(g_parser_error, 128, "InitParser() => Failed to allocate the parser.\n");
 		return NULL;
 	}
 
@@ -27,7 +27,7 @@ Parser* InitParser(const char* filename) {
 
 	if (err)
 	{
-		sprintf_s(g_error, 128, "InitParser() => Failed to open stream.\n");
+		sprintf_s(g_parser_error, 128, "InitParser() => Failed to open stream.\n");
 		return NULL;
 	}
 
@@ -44,7 +44,7 @@ int ParseFile(const char* filename)
 
 	if (err)
 	{
-		sprintf_s(g_error, 128, "Failed to open the given buffer %s.", filename);
+		sprintf_s(g_parser_error, 128, "Failed to open the given buffer %s.", filename);
 		return err;
 	}
 
@@ -81,7 +81,7 @@ int ParseStream(void* stream)
 
 	// Buffer size for the given line.
 	char buf[BUF_MAX_SIZE];
-	while (fgets(buf, BUF_MAX_SIZE, stream) != NULL) {
+	while (fgets(buf, BUF_MAX_SIZE, (FILE*)stream) != NULL) {
 		/*
 		Lexers and parsers are most often used for compilers, 
 		but can be used for other computer language tools, 
@@ -94,11 +94,11 @@ int ParseStream(void* stream)
 		*/
 
 		// Build the node list.
-		Token* tok_clas;
+		Token* tok_obj;
 		LxeTokenData* lexeme = LxeSetLine(lexeme_list, buf);
 
-		tok_clas = TokGetToken(lexeme->buffer);
-		SemAssignToken(tok_clas, lexeme);
+		tok_obj = TokGetToken(lexeme->buffer);
+		SemAssignToken(tok_obj, lexeme);
 
 		//
 		// Assigning Token Type is different for the TokenData
@@ -106,16 +106,10 @@ int ParseStream(void* stream)
 		//
 
 		LxeTokenValue* token;
-		while ((token = LxeGetNextToken(lexeme_list, lexeme)) != NULL)
+		while ((token = LxeGetNextToken(lexeme)) != NULL)
 		{
-			//
-			// Match the Token.
-			//
-
-			tok_clas = TokGetToken(token->data);
-			SemAssignToken(tok_clas, token);
-			// SemClas assigned to the lexeme objects?
-			// Or handled in separate table?
+			tok_obj = TokGetToken(token->data);
+			SemAssignToken(tok_obj, token);
 		}
 	}
 

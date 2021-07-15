@@ -6,13 +6,13 @@
 #include <string.h>
 
 
-char g_error[128];
+char g_node_error[128];
 
 Block* CreateBlock(int type)
 {
 	Block* blk = (Block*)malloc(sizeof(Block));
 	if (blk == NULL) {
-		sprintf(g_error, "block_add() => Internal Memory error.\n");
+		sprintf(g_node_error, "block_add() => Internal Memory error.\n");
 		return NULL;
 	}
 
@@ -25,7 +25,7 @@ Prop* CreateProp(Block* blk, char* key)
 {
 	Prop* prop = (Prop*)malloc(sizeof(Prop));
 	if (prop == NULL) {
-		sprintf(g_error, "prop_add() => Internal Memory error.\n");
+		sprintf(g_node_error, "prop_add() => Internal Memory error.\n");
 	}
 
 	// prop->values = (Attr*)malloc(sizeof(Attr) * ATTR_LIST_MAX);
@@ -40,7 +40,7 @@ Attr* CreateAttr(Prop* prp, char* data)
 	Attr* attr = malloc(sizeof(Attr));
 
 	if (attr == NULL) {
-		sprintf(g_error, "attr_add() => Internal Memory error.\n");
+		sprintf(g_node_error, "attr_add() => Internal Memory error.\n");
 		return NULL;
 	}
 	attr->data = data;
@@ -80,7 +80,7 @@ Node* AddNode(NodeContext* ctrl, Node* root, Block* data)
 {
 	Node* node = (Node*)malloc(sizeof(Node));
 	if (node == NULL) {
-		sprintf(g_error, "AddNode() => Failed to allocate new node.");
+		sprintf(g_node_error, "AddNode() => Failed to allocate new node.");
 		return NULL;
 	}
 
@@ -93,7 +93,7 @@ Node* AddNode(NodeContext* ctrl, Node* root, Block* data)
 void InsertAttr(Prop* prp, Attr* attr)
 {
 	/*if (prp->attributes ATTR_LIST_LEN) {
-		sprintf(g_error, "InsertAttr() => List length exceeded.");
+		sprintf(g_node_error, "InsertAttr() => List length exceeded.");
 		return;
 	}*/
 

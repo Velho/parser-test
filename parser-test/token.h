@@ -93,10 +93,10 @@ DEF_TOKEN_CLASS(ActionToken, ActionTokens);
 DEF_TOKEN_CLASS(OperatorToken, OperatorTokens);
 DEF_TOKEN_CLASS(BlockToken, BlockTokens);
 
-ConditionToken* cond_token_get_by_str(char* data);
-ActionToken* act_token_get_by_str(char* data);
-OperatorToken* op_token_get_by_str(char* data);
-BlockToken* blk_token_get_by_str(char* data);
+const ConditionToken* cond_token_get_by_str(char* data);
+const ActionToken* act_token_get_by_str(char* data);
+const OperatorToken* op_token_get_by_str(char* data);
+const BlockToken* blk_token_get_by_str(char* data);
 
 typedef union {
 	ConditionToken ctoken;
@@ -113,7 +113,7 @@ typedef enum {
 } TokenType;
 
 typedef struct _Token {
-	void* clas;
+	const void* clas;
 	TokenType type;
 } Token;
 

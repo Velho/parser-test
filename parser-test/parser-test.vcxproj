@@ -143,8 +143,9 @@
     <ClCompile Include="node.c" />
     <ClCompile Include="parser.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="sem.c" />
+    <ClCompile Include="semn.c" />
     <ClCompile Include="token.c" />
+    <ClCompile Include="window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lexer.h" />
@@ -152,8 +153,9 @@
     <ClInclude Include="parser.h" />
     <ClInclude Include="pdef.h" />
     <ClInclude Include="sanal.h" />
-    <ClInclude Include="sem.h" />
+    <ClInclude Include="semn.h" />
     <ClInclude Include="token.h" />
+    <ClInclude Include="window\window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

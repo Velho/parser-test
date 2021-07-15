@@ -18,12 +18,12 @@
 #define LxeStrSizeInBytes(str)		_countof(str)
 #endif
 
-char g_error[ERROR_BUFFER_LEN];
+char g_lex_error[ERROR_BUFFER_LEN];
 
 
 char* GetErrorMessage()
 {
-	return g_error;
+	return g_lex_error;
 }
 
 LxeTokenContext* CreateTokenContext(Parser* parser)
@@ -216,17 +216,6 @@ void LxeTraverseList(LxeTokenContext* list, LxeTokenDataCallback cb)
 	}
 }
 
-
-LxeTokenValue* LxeNewToken(Token* token, char* data)
-{
-	LxeTokenValue* tok = (LxeTokenValue*)malloc(sizeof(LxeTokenValue));
-	size_t len = strnlen_s(data, BUF_MAX_SIZE);
-
-	strcpy_s(tok->data, LxeStrSizeInBytes(tok->data), data);
-
-	return tok;
-}
-
 static LxeTokenValue* LxeNewTokenValue(const char* str, size_t len)
 {
 	LxeTokenValue* token_value = (LxeTokenValue*)malloc(sizeof(LxeTokenValue));
@@ -256,7 +245,7 @@ LxeTokenValue* LxeInsertNode(LxeTokenData* /* head */ token, char* data)
 	if (temp == NULL)
 	{
 		// Failed allocation.
-		sprintf_s(g_error, ERROR_BUFFER_LEN, "LxeInsertNode(..) => Failed allocation of new TokenValue.\n");
+		sprintf_s(g_lex_error, ERROR_BUFFER_LEN, "LxeInsertNode(..) => Failed allocation of new TokenValue.\n");
 		return NULL;
 	}
 
@@ -324,17 +313,17 @@ LxeTokenData* LxeSetLine(LxeTokenContext* list, const char* str)
 
 	if (lexeme == NULL)
 	{
-		sprintf_s(g_error, ERROR_BUFFER_LEN, "LxeSetLine() => Failed to allocate new LxeTokenData.\n");
+		sprintf_s(g_lex_error, ERROR_BUFFER_LEN, "LxeSetLine() => Failed to allocate new LxeTokenData.\n");
 		return NULL;
 	}
 
 	// Get the first token.
-	token = strtok_s(str, TOKEN_DATA_DELIM, &lexeme->token_ctx);
+	token = strtok_s((char*)str, TOKEN_DATA_DELIM, &lexeme->token_ctx);
 	printf("Tokenizer context : %p\n", lexeme->token_ctx);
 
 	if (token == NULL)
 	{
-		sprintf_s(g_error, ERROR_BUFFER_LEN, "LxeSetLine() => Failed to tokenize the string.\n");
+		sprintf_s(g_lex_error, ERROR_BUFFER_LEN, "LxeSetLine() => Failed to tokenize the string.\n");
 		return lexeme;
 	}
 
@@ -352,7 +341,7 @@ LxeTokenData* LxeSetLine(LxeTokenContext* list, const char* str)
 	return lexeme;
 }
 
-LxeTokenValue* LxeGetNextToken(LxeTokenContext* list, LxeTokenData* type)
+LxeTokenValue* LxeGetNextToken(LxeTokenData* type)
 {
 	char* token;
 	//size_t token_len;

@@ -24,9 +24,6 @@ typedef struct _LxeTokenValue {
 
 
 //
-// TODO : Fix the TokenData and TokenDataList structs.
-// TODO : Fix the documentation.
-// 
 // Implements the Doubly Linked List.
 // While linked list is traversable one way
 // thro the next pointer, but with the Doubly
@@ -92,4 +89,4 @@ LxeTokenData* LxeSetLine(LxeTokenContext* list, const char* str);
 /**
  *
  */
-LxeTokenValue* LxeGetNextToken(LxeTokenContext* list, LxeTokenData* type);
+LxeTokenValue* LxeGetNextToken(LxeTokenData* type);
