@@ -1,18 +1,18 @@
 # Source configuration.
 
 set(PARSER_TEST_HEADERS
-    lexer.h
-    parser.h
-    token.h
-    pdef.h
-    sem-anal.h)
+    parser/lexer.h
+    parser/parser.h
+    parser/token.h
+    parser/pdef.h
+    parser/sem-anal.h)
 
 set(PARSER_TEST_SRC 
-    main.cpp
-    lexer.cpp
-    parser.cpp
-    token.cpp
-    sem-anal.cpp)
+    parser/main.cpp
+    parser/lexer.cpp
+    parser/parser.cpp
+    parser/token.cpp
+    parser/sem-anal.cpp)
 
 if(MSVC)
     set(PARSER_TEST_HEADERS ${PARSER_TEST_HEADERS} window/window.h)
@@ -23,7 +23,10 @@ if(MSVC)
         ${PARSER_TEST_SRC})
 
     add_executable(parser-test WIN32 ${PARSER_SRCS})
+
+    # Add the current folder to -I.
+    target_include_directories (parser-test PRIVATE .)
     # Specify the warning level, treat all warnings as errors.
-    target_compile_options(parser-test PRIVATE "/W4")
+    target_compile_options(parser-test PRIVATE "/WX")
 endif()
 

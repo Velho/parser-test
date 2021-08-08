@@ -1,5 +1,6 @@
 #include "window.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 
@@ -14,19 +15,43 @@ typedef struct _WinHandler {
 
 WinHandler* WinCreate(HINSTANCE inst, int nCmdShow)
 {
-    WinHandler *state = (WinHandler*)malloc(sizeof(WinHandler));
-    
-    state->nCmdShow = nCmdShow;
-    // Initialize the window class to zero.
-    memset(&state->wc, 0, sizeof(WNDCLASS));
+    WinHandler *handler = (WinHandler*)malloc(sizeof(WinHandler));
 
-    WNDCLASS wc;
+    if (handler == NULL)
+    {
+        return NULL;
+    }
+
+    handler->nCmdShow = nCmdShow;
+    handler->hInst = inst;
+
+    WNDCLASS wc = { 0 };
     wc.lpfnWndProc = WindowProc;
-    wc.hInstance = inst;
+    wc.hInstance = handler->hInst;
     wc.lpszClassName = P_WINDOW_CLASS_NAME;
+    wc.style = CS_HREDRAW | CS_VREDRAW;
 
-    memcpy(&state->wc, &wc, sizeof(WNDCLASS));
-    return state;
+    RegisterClass(&wc);
+
+    HWND hwnd = CreateWindowEx(
+        WS_EX_CLIENTEDGE,
+        P_WINDOW_CLASS_NAME,
+        P_WINDOW_NAME,
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+        NULL, NULL,
+        inst, //! Instance handle
+        NULL
+    );
+
+    if (hwnd == NULL)
+    {
+        return handler;
+    }
+
+    handler->hwnd = hwnd;
+
+    return handler;
 }
 
 void WinRelease(WinHandler* handler)
@@ -36,24 +61,11 @@ void WinRelease(WinHandler* handler)
 
 int WinRun(WinHandler* handler)
 {
-    // Register before create?
-    RegisterClass(&handler->wc);
-    HWND hwnd = CreateWindowEx(
-        0,
-        P_WINDOW_CLASS_NAME,
-        P_WINDOW_NAME,
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-        NULL, NULL,
-        handler->hInst, //! Instance handle
-        NULL
-    );
-
-    memcpy(&handler->hwnd, &hwnd, sizeof(HWND));
+   
     ShowWindow(handler->hwnd, SW_SHOW);
 
     // Run the message loop.
-    MSG msg;
+    MSG msg = { 0 };
     while (GetMessage(&msg, NULL, 0, 0))
     {
         TranslateMessage(&msg);

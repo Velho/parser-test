@@ -15,11 +15,19 @@
 // executes the given command.
 //
 
-
 typedef struct _WinHandler WinHandler;
 
-
+/**
+ * @brief Creates the Window context.
+ * 
+ * @param inst
+ * @param nCmdShow
+ */
 WinHandler* WinCreate(HINSTANCE inst, int nCmdShow);
+
+/**
+ * @brief Release the handler allocation.
+ */
 void WinRelease(WinHandler* handler);
 
 /**
