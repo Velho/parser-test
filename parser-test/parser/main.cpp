@@ -38,13 +38,21 @@ char g_hide_block_filter[] =
 
 //
 // Entry-Point
+// TODO : Fix the obvious application wide issues...... kekw
+// TODO : Implement the error handlers.
 //
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	int ret;
 	WinHandler* handler = WinCreate(hInstance, nCmdShow);
 
+	if (handler == NULL)
+	{
+		return 0;
+	}
+
 	ret = WinRun(handler);
+	WinRelease(handler);
 
 	return ret;
 

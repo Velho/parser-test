@@ -365,7 +365,7 @@ LxeTokenValue* LxeGetNextToken(LxeTokenData* type)
 	lxe_token = LxeInsertNode(type, token);
 
 #ifdef DEBUG_LOGGER
-	printf("LxeGetNextToken() => Next Token: \t%s\tLen => %d\n", lxe_token->data, type->size);
+	printf("LxeGetNextToken() => Next Token: \t%s\tLen => %zu\n", lxe_token->data, type->size);
 #endif
 
 	return lxe_token;

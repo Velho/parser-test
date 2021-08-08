@@ -88,7 +88,6 @@ const BlockToken block_tokens[] =
 
 const ConditionToken* cond_token_get_by_str(char* data)
 {
-	int sz = sizeof(condition_tokens) / sizeof(ConditionToken);
 	const ConditionToken* tk;
 
 	for (tk = condition_tokens; tk != NULL; tk++)
