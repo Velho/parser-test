@@ -157,7 +157,7 @@ static Token* TokAlloc(const void* tok, TokenType type)
 	return newToken;
 }
 
-Token* TokGetToken(const char* data)
+Token* TokGetToken(const char* data, size_t size)
 {
 	const void* clas;
 	if ((clas = cond_token_get_by_str((char*)data)) != NULL)

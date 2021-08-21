@@ -93,12 +93,15 @@ int ParseStream(void* stream)
 		which converts lexemes into processed values. 
 		*/
 
+		// TODO : Fix the commented.
+
 		// Build the node list.
-		Token* tok_obj;
+		
+		// Token* tok_obj;
 		LxeTokenData* lexeme = LxeSetLine(lexeme_list, buf);
 
-		tok_obj = TokGetToken(lexeme->buffer);
-		SemAssignToken(tok_obj, lexeme);
+		/*tok_obj = TokGetToken(lexeme->buffer);
+		SemAssignToken(tok_obj, lexeme);*/
 
 		//
 		// Assigning Token Type is different for the TokenData
@@ -108,8 +111,8 @@ int ParseStream(void* stream)
 		LxeTokenValue* token;
 		while ((token = LxeGetNextToken(lexeme)) != NULL)
 		{
-			tok_obj = TokGetToken(token->data);
-			SemAssignToken(tok_obj, token);
+			//tok_obj = TokGetToken(token->data, token_length);
+			//SemAssignToken(tok_obj, token);
 		}
 	}
 

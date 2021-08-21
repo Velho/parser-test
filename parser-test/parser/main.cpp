@@ -1,6 +1,6 @@
 #include "parser.h"
 
-#include "window/window.h"
+// #include "window/window.h"
 
 #include <stdio.h>
 
@@ -34,27 +34,20 @@ char g_hide_block_filter[] =
 	"DisableDropSound True"
 };
 
-#define FILTER_PATH "C:/Users/Velho/source/repos/parser-test/Debug/"
+#define FILTER_PATH		"C:/Users/Velho/source/repos/parser-test/filters/"
+#define FILTER_PATH_1	"sample1.filter"
+#define FILTER_PATH_2	"sample2.filter"
+
 
 //
 // Entry-Point
 // TODO : Fix the obvious application wide issues...... kekw
 // TODO : Implement the error handlers.
 //
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+// int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+int main()
 {
 	int ret;
-	WinHandler* handler = WinCreate(hInstance, nCmdShow);
-
-	if (handler == NULL)
-	{
-		return 0;
-	}
-
-	ret = WinRun(handler);
-	WinRelease(handler);
-
-	return ret;
 
 	//
 	// Implement a console renderer.
@@ -63,10 +56,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	//
 
 	// Parse the given stream.
-	// ret = ParseFile(FILTER_PATH "filters/sample2.filter");
-	
+	 ret = ParseFile(FILTER_PATH "sample1.filter"); // "filters/sample2.filter"
+
 	// Able to use the same context?
 
 	// ...
 	// Profit
+	return ret;
 }

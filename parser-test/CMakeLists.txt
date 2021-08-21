@@ -15,14 +15,16 @@ set(PARSER_TEST_SRC
     parser/sem-anal.cpp)
 
 if(MSVC)
-    set(PARSER_TEST_HEADERS ${PARSER_TEST_HEADERS} window/window.h)
-    set(PARSER_TEST_SRC ${PARSER_TEST_SRC} window/window.cpp)
+    # TODO
+    # set(PARSER_TEST_HEADERS ${PARSER_TEST_HEADERS} window/window.h)
+    # set(PARSER_TEST_SRC ${PARSER_TEST_SRC} window/window.cpp)
+    # WIN32
 
     set(PARSER_SRCS
         ${PARSER_TEST_HEADERS}
         ${PARSER_TEST_SRC})
 
-    add_executable(parser-test WIN32 ${PARSER_SRCS})
+    add_executable(parser-test  ${PARSER_SRCS})
 
     # Add the current folder to -I.
     target_include_directories (parser-test PRIVATE .)

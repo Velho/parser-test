@@ -2,7 +2,16 @@
 
 #include <stddef.h>
 
-#define BUF_MAX_SIZE	512
+#define BUF_MAX_SIZE	512 // TODO : OASD Destoryed this. Make more
+
+/** 
+ * These can be quite the long lines. 
+ * hasExplMods
+ * BaseTypes
+ * 
+ * Scrape these websites :
+ * https://www.pathofexile.com/item-data
+ */
 
 // typedef struct Token Token;
 //typedef struct _TokenData LxeTokenValue;

@@ -117,7 +117,7 @@ typedef struct _Token {
 	TokenType type;
 } Token;
 
-Token* TokGetToken(const char* data);
+Token* TokGetToken(const char* data, size_t size);
 
 //
 // Support functions for the Token Class identifying,
