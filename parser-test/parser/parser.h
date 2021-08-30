@@ -2,20 +2,24 @@
 
 #include <stdio.h>
 
-typedef enum {
-	p_default,
-	p_start,
-	p_block,
-	p_property,
-	p_attribute,
-	p_end
-} ParserState;
+//
+// Current parser is implement for read only operations
+// at the moment, perhaps when the time comes to make
+// direct edits to the given file, create different module
+// called "editor" for example to handle the write operations.
+//
 
-struct _LxeTokenContext;
+enum ParserError {
+	P_PARSER_OK,
+	P_PARSER_ERROR,
+	P_PARSER_FILE_NOT_FOUND
+};
 
-typedef struct _Parser {
+typedef int ParserResult;
+struct LxeTokenContext;
+
+struct Parser {
 	FILE* stream;
-	ParserState state;
 
 	char* pos;
 	unsigned int current_line;
@@ -24,8 +28,8 @@ typedef struct _Parser {
 	size_t length;
 
 	char error[128];
-	struct _LxeTokenContext* lexer_ctx;
-} Parser;
+	struct LxeTokenContext* ctx_lexer;
+};
 
 Parser* CreateParser();
 
