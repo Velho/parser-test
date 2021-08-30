@@ -31,12 +31,19 @@ struct Parser {
 	struct LxeTokenContext* ctx_lexer;
 };
 
-Parser* CreateParser();
 
-//
-// Pass the Parser as argument?
-//
+/**
+ * @brief
+ *
+ * @param file
+ * @return ParserResult
+ */
+ParserResult ParseFile(const char* filename);
 
-int ParseStream(void* stream);
-int ParseFile(const char* filename);
-
+/**
+ * @brief
+ *
+ * @param stream String array containing the parseable stream.
+ * @return ParserResult
+ */
+ParserResult ParseStream(const char* stream);
