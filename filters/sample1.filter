@@ -1,0 +1,9 @@
+Show
+	Rarity Rare
+	HasInfluenceShaper Elder Crusader Redeemer Hunter Warlord
+	SetFontSize 45
+	MinimapIcon 1 Yellow Circle
+	PlayEffect Yellow
+	PlayAlertSound 2 300
+	DisableDropSound True
+	
