@@ -6,10 +6,6 @@
 
 #include <windows.h>
 
-#define P_WINDOW_NAME               L"Parser"
-#define P_WINDOW_CLASS_NAME         L"Sample Window Class"
-
-
 //
 // Simple console renderer for the application,
 // executes the given command.

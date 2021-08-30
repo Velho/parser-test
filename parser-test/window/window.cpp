@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define P_WINDOW_NAME               L"Parser"
+#define P_WINDOW_CLASS_NAME         L"Sample Window Class"
+
+
 
 /** Win32 **/
 typedef struct _WinHandler {
