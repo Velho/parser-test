@@ -17,51 +17,57 @@
 	} clas;
 
 
+/**
+ * @brief Enumeration of the Condition Tokens.
+ */
 typedef enum {
 	E_NONE,
-	E_ALTQUAL, 		//! AlternateQuality
-	E_ANYENCH, 		//! AnyEnchantment
-	E_AREALVL, 		//! AreaLevel
-	E_BASETYPE,		//! BaseType
-	E_BLIGHTMAP, 	//! BlightedMap
-	E_CLASS, 		//! Class
-	E_CORRUPTED, 	//! Corrupted
-	E_CORRUPTEDMOD,	//! CorruptedMods
-	E_DROPLVL, 		//! DropLevel
-	E_ELDERITEM,	//! ElderItem
-	E_ELDERMAP,		//! ElderMap
-	E_ENCHPASSNODE,	//! EnchantmentPassiveNode
-	E_ENCHPASSNUM,	//! EnchantmentPassiveNum
-	E_FRACTITEM,	//! FracturedItem
-	E_GEMLEVEL,		//! GemLevel
-	E_GEMQUALTYPE,	//! GemQualityType
-	E_HASENCH,		//! HasEnchantment
-	E_HASEXPLMOD,	//! HasExplicitMod
-	E_HASINFL,		//! HasInfluence
-	E_HEIGHT,		//! Height
-	E_IDENTIFIED,	//! Identified
-	E_ITEMLVL,		//! ItemLevel
-	E_LINKEDSOCKETS,//! LinkedSockets
-	E_MAPTIER,		//! MapTier
-	E_MIRRORED,		//! Mirrored
-	E_PROPHECY,		//! Prophecy
-	E_QUALITY,		//! Quality
-	E_RARITY,		//! Rarity
-	E_REPLICA,		//! Replica
-	E_SHAPEDMAP,	//! ShapedMap
-	E_SHAPERITEM,	//! ShaperItem
-	E_SOCKETGROUP,	//! SocketGroup
-	E_SOCKETS,		//! Sockets
-	E_STACKSIZE,	//! StackSize
-	E_SYNTHITEM,	//! SynthesisedItem
-	E_WIDTH,		//! Width
+	E_ALTQUAL, 		//< AlternateQuality
+	E_ANYENCH, 		//< AnyEnchantment
+	E_AREALVL, 		//< AreaLevel
+	E_BASETYPE,		//< BaseType
+	E_BLIGHTMAP, 	//< BlightedMap
+	E_CLASS, 		//< Class
+	E_CORRUPTED, 	//< Corrupted
+	E_CORRUPTEDMOD,	//< CorruptedMods
+	E_DROPLVL, 		//< DropLevel
+	E_ELDERITEM,	//< ElderItem
+	E_ELDERMAP,		//< ElderMap
+	E_ENCHPASSNODE,	//< EnchantmentPassiveNode
+	E_ENCHPASSNUM,	//< EnchantmentPassiveNum
+	E_FRACTITEM,	//< FracturedItem
+	E_GEMLEVEL,		//< GemLevel
+	E_GEMQUALTYPE,	//< GemQualityType
+	E_HASENCH,		//< HasEnchantment
+	E_HASEXPLMOD,	//< HasExplicitMod
+	E_HASINFL,		//< HasInfluence
+	E_HEIGHT,		//< Height
+	E_IDENTIFIED,	//< Identified
+	E_ITEMLVL,		//< ItemLevel
+	E_LINKEDSOCKETS,//< LinkedSockets
+	E_MAPTIER,		//< MapTier
+	E_MIRRORED,		//< Mirrored
+	E_PROPHECY,		//< Prophecy
+	E_QUALITY,		//< Quality
+	E_RARITY,		//< Rarity
+	E_REPLICA,		//< Replica
+	E_SHAPEDMAP,	//< ShapedMap
+	E_SHAPERITEM,	//< ShaperItem
+	E_SOCKETGROUP,	//< SocketGroup
+	E_SOCKETS,		//< Sockets
+	E_STACKSIZE,	//< StackSize
+	E_SYNTHITEM,	//< SynthesisedItem
+	E_WIDTH,		//< Width
 } ConditionTokens;
 
+/**
+ * @brief 
+ */
 typedef enum {
-	E_COMMENT,
-	E_SHOW,
-	E_HIDE,
-	E_CONTINUE
+	E_COMMENT,		//< Comment token.
+	E_SHOW,			//< Show block token.
+	E_HIDE,			//< Hide block token.
+	E_CONTINUE		//< Continue token.
 } BlockTokens;
 
 typedef enum {
