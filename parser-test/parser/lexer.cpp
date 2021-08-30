@@ -34,7 +34,7 @@ LxeTokenContext* CreateTokenContext(Parser* parser)
 	LxeTokenContext* typelist = (LxeTokenContext*)malloc(sizeof(LxeTokenContext));
 
 	// Assign the lexer context to the parser object.
-	parser->lexer_ctx = typelist;
+	parser->ctx_lexer = typelist;
 
 	typelist->head = NULL;
 	typelist->trail = NULL;
@@ -47,7 +47,7 @@ static void LxeReleaseTokenValue(LxeTokenData* data)
 {
 	LxeTokenValue* head;
 	LxeTokenValue* temp;
-	
+
 	head = data->head;
 	temp = data->head;
 
@@ -67,7 +67,7 @@ static void LxeReleaseTokenData(LxeTokenContext* list)
 
 	// TODO : Remove the singly linked list as well
 	// under the LxeTokenData -> head of type TokenValue.
-	
+
 	// head->prev == NULL , this stmnt should apply.
 	last = list->head->next;
 
@@ -350,7 +350,7 @@ LxeTokenValue* LxeGetNextToken(LxeTokenData* type)
 	//size_t token_len;
 	LxeTokenValue* lxe_token;
 
-	// 
+	//
 	// strtok_s() the passed string.
 	// Tokenization is started in the SetLine function,
 	// so it can be called with NULL and token_ctx.
