@@ -14,7 +14,10 @@
 // MSVC is defined, don't care about the resulting value.
 #ifdef _MSC_VER
 // TODO : Redefine it to something else on different platforms.
-	//<! Returns the String size in bytes.
+
+/**
+ * @brief Returns the String size in bytes.
+ */
 #define LxeStrSizeInBytes(str)		_countof(str)
 #endif
 
@@ -235,8 +238,8 @@ LxeTokenValue* LxeInsertNode(LxeTokenData* /* head */ token, char* data)
 	// Adds the newly created value to the linked list.
 
 	size_t datalen;
-	struct _LxeTokenValue* temp;
-	struct _LxeTokenValue* p;
+	struct LxeTokenValue* temp;
+	struct LxeTokenValue* p;
 
 	datalen = strnlen_s(data, BUF_MAX_SIZE);
 

@@ -2,7 +2,9 @@
 
 #include <stddef.h>
 
-#define BUF_MAX_SIZE	512 // TODO : OASD Destoryed this. Make more
+// TODO : OASD Destoryed this. Make more
+// Dynamic buffer size?
+#define BUF_MAX_SIZE	512
 
 /** 
  * These can be quite the long lines. 
@@ -22,14 +24,13 @@
 // TODO : Rename this file to tokenizer.h
 //
 
-struct _Parser;
-
-typedef struct _LxeTokenValue {
+struct Parser;
+struct LxeTokenValue {
 	char data[BUF_MAX_SIZE]; // Replace it with the buffer.
 	size_t len;
 
-	struct _LxeTokenValue* next;
-} LxeTokenValue;
+	struct LxeTokenValue* next;
+};
 
 
 //
@@ -44,7 +45,7 @@ typedef struct _LxeTokenValue {
 // Doubly linked list is described with quick operations,
 // efficient insertion and removal at any given position.
 //
-typedef struct _LxeTokenData {
+struct LxeTokenData {
 	LxeTokenValue* head;
 	LxeTokenValue* values;
 	size_t value_size;
@@ -56,24 +57,24 @@ typedef struct _LxeTokenData {
 	char buffer[BUF_MAX_SIZE]; //! TODO : Dynamic buffer instead of static.
 
 	//! Doubly linked list.
-	struct _LxeTokenData* next;
-	struct _LxeTokenData* prev;
+	struct LxeTokenData* next;
+	struct LxeTokenData* prev;
 
 	size_t size; //! Linked list length.
-} LxeTokenData;
+};
 
 typedef void (*LxeTokenDataCallback)(LxeTokenData*);
 
-typedef struct _LxeTokenContext {
+struct LxeTokenContext {
 	LxeTokenData* head;
 	LxeTokenData* trail;
 
 	size_t size;
-} LxeTokenContext;
+};
 
 char* GetErrorMessage();
 
-LxeTokenContext* CreateTokenContext(struct _Parser* parser);
+LxeTokenContext* CreateTokenContext(struct Parser* parser);
 void LxeRelease(LxeTokenContext* ctx); //! Free the memory used the lexer context.
 
 void LTypeAddList(LxeTokenContext* list, LxeTokenData* type); //<! Deprecated.
