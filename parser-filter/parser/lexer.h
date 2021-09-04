@@ -6,11 +6,11 @@
 // Dynamic buffer size?
 #define BUF_MAX_SIZE	512
 
-/** 
- * These can be quite the long lines. 
+/**
+ * These can be quite the long lines.
  * hasExplMods
  * BaseTypes
- * 
+ *
  * Scrape these websites :
  * https://www.pathofexile.com/item-data
  */
@@ -25,6 +25,7 @@
 //
 
 struct Parser;
+
 struct LxeTokenValue {
 	char data[BUF_MAX_SIZE]; // Replace it with the buffer.
 	size_t len;
@@ -38,7 +39,7 @@ struct LxeTokenValue {
 // While linked list is traversable one way
 // thro the next pointer, but with the Doubly
 // linked list it's possible to traverse in reverse.
-// 
+//
 // In this use case where we build sequental list from
 // start of the file to the end, it's prolly not needed
 // the ability to traverse it in both ways.

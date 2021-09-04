@@ -4,6 +4,6 @@
 ##
 
 cmake_minimum_required(VERSION 3.9)
-project(parser-test C CXX)
+project(parser C CXX)
 
-add_subdirectory(parser-test)
+add_subdirectory(parser-filter)

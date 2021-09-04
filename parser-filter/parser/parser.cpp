@@ -190,6 +190,7 @@ static ParserResult Parse(ParserReader reader, void *stream)
 
 	LxeTokenContext *lexeme_list = CreateTokenContext(parser);
 
+	// TODO Lines can be very long, take this to account.
 	// Buffer size for the given line.
 	char buf[BUF_MAX_SIZE];
 	while (reader(buf, BUF_MAX_SIZE, stream) != NULL)

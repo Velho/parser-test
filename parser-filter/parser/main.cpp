@@ -4,6 +4,11 @@
 
 #include <stdio.h>
 
+#ifndef UNICODE
+#define UNICODE
+#endif
+
+#include <windows.h>
 
 char g_show_block_filter[] =
 {
@@ -34,20 +39,24 @@ char g_hide_block_filter[] =
 	"DisableDropSound True"
 };
 
-#define FILTER_PATH		"C:/Users/Velho/source/repos/parser-test/filters/"
-#define FILTER_PATH_1	"sample1.filter"
-#define FILTER_PATH_2	"sample2.filter"
+#define FILTER_PATH		"C:/Users/Velho/source/repos/parser/filters/"
+#define F_SAMPLE_1		"sample1.filter"
+#define F_SAMPLE_2		"sample2.filter"
 
+#define FILTER_EXPAND_N(P, F) 	P ## F
+#define STRING_EXPAND(S, E)		FILTER_EXPAND_N(S, E)
 
 //
 // Entry-Point
+// TODO : Add support for the parsing the array from line 21 e.g.
 // TODO : Fix the obvious application wide issues...... kekw
 // TODO : Implement the error handlers.
+// TODO : Consider using the WinMain for main function.
 //
 // int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
-int main()
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-	int ret;
+	int retVal;
 
 	//
 	// Implement a console renderer.
@@ -55,12 +64,20 @@ int main()
 	// give any input and perform all application actions.
 	//
 
+	if (!ParseStream(g_hide_block_filter))
+	{
+		printf("Failed to parse the stream.\n");
+		retVal = -1;
+	}
+
 	// Parse the given stream.
-	 ret = ParseFile(FILTER_PATH "sample1.filter"); // "filters/sample2.filter"
+	// retVal = ParseFile(FILTER_EXPAND(FILTER_PATH, F_SAMPLE_1)); // "filters/sample2.filter"
+
+	// ret = Parse();
 
 	// Able to use the same context?
 
 	// ...
 	// Profit
-	return ret;
+	return retVal;
 }
