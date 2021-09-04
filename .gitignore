@@ -10,6 +10,9 @@
 *.userosscache
 *.sln.docstates
 
+# gitconfig atm as ignored
+.gitconfig
+
 .build*/
 build/
 Debug/
